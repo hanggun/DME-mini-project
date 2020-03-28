@@ -92,7 +92,7 @@ def TNoM(data, label, desc, k):
         TNoM.append(np.min(gene_acc))
     
     #get index in increase order of TNoM score
-    index = sorted(range(len(TNoM)), key=lambda i: TNoM[i])[0:10]
+    index = sorted(range(len(TNoM)), key=lambda i: TNoM[i])[0:k]
     
     #get the rows of feature
     X = data[:, index]
