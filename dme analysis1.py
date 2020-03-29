@@ -253,7 +253,9 @@ def TNoM(data, label, desc, k=10):
     
     #get the rows of feature
     X = data[:, index]
+    TNoM = pd.DataFrame({'TNoM':TNoM})
     Xd = desc.loc[index, :]
+    Xd = Xd.join(TNoM.loc[index,:])
     
     return X,Xd
 
@@ -418,7 +420,8 @@ def MFAplus(data, label, desc, threshold, k_neighbor=5, k=10):
     '''
     feature, feature_desc = MFA(colon_scale, colon_label, desc, k_neighbor, k=2000)
     X = feature[:,0].reshape(-1,1)
-    Xd = feature_desc.iloc[0]
+    Xd = pd.DataFrame()
+    Xd = pd.concat([Xd,desc.iloc[1:2]])
     
     j = 0
     while X.shape[1] < k:
