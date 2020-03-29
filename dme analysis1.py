@@ -282,7 +282,7 @@ def KNN1(data, label, k):
     '''
 
     k1 = np.ones([62,k])
-    index0 = label.index[label['label'] == 0].tolist()
+    index0 = label.index[label['label'] == -1].tolist()
     index1 = label.index[label['label'] == 1].tolist()
     
     for i in range(62):
@@ -309,13 +309,13 @@ def KNN1(data, label, k):
     return k1
     
 #calculate k nearest neiborhoods of sample x of different labels and record the index   
-def KNN2(data, label, k):
+def KNN2(data, label, k=5):
     '''
     Calculate k nearest neiborhoods of sample x of different labels and record the index
     '''
 
     k2 = np.ones([62,k])
-    index0 = label.index[label['label'] == 0].tolist()
+    index0 = label.index[label['label'] == -1].tolist()
     index1 = label.index[label['label'] == 1].tolist()
     
     for i in range(62):
@@ -437,19 +437,21 @@ def MFAplus(data, label, desc, threshold, k_neighbor=5, k=10):
     feature, feature_desc = MFA(colon_scale, colon_label, desc, k_neighbor, k=2000)
     X = feature[:,0].reshape(-1,1)
     Xd = pd.DataFrame()
-    Xd = pd.concat([Xd,desc.iloc[[0], :]])
+    Xd = pd.concat([Xd,feature_desc.iloc[[0], :]])
     
     j = 0
     while X.shape[1] < k:
         j += 1
+        flag = 0
         for i in range(X.shape[1]):
             corr, p = pearsonr(X[:,i], feature[:,j])
             
             if corr > threshold:
-                break;
-            
-        X = np.append(X,feature[:,j].reshape(-1,1),axis=1)
-        Xd = pd.concat([Xd,desc.iloc[[j], :]])
+                flag = 1
+        
+        if flag == 0:
+            X = np.append(X,feature[:,j].reshape(-1,1),axis=1)
+            Xd = pd.concat([Xd,feature_desc.iloc[[j], :]])
         
     return X,Xd
 
