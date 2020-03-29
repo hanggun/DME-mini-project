@@ -53,7 +53,7 @@ def ConvertLabels(labels, convert=False):
     label = labels.copy()
     if convert == False:
         label.loc[labels[column_name] > 0] = 1
-        label.loc[labels[column_name] <= 0] = 0
+        label.loc[labels[column_name] <= 0] = -1
     else:
         label.loc[labels[column_name] > 0] = 'normal'
         label.loc[labels[column_name] <= 0] = 'tumor'
@@ -231,9 +231,9 @@ def TNoM(data, label, desc, k=10):
         for j in range(62):
             
             #perform desicion stump
-            t = single_gene[j]
+            t = single_gene[j] + 1e-6
             temp = single_gene.copy()
-            temp[single_gene <= t] = 0
+            temp[single_gene < t] = -1
             temp[single_gene > t] = 1
             
             #record the accuracy
@@ -241,8 +241,24 @@ def TNoM(data, label, desc, k=10):
             
             #change the direction and repeat
             temp = single_gene.copy()
-            temp[single_gene <= t] = 1
-            temp[single_gene > t] = 0
+            temp[single_gene < t] = 1
+            temp[single_gene > t] = -1
+            
+            gene_acc.append(np.sum(temp.reshape(-1,1) != label.values))
+            
+            #perform desicion stump
+            t = single_gene[j] - 1e-6
+            temp = single_gene.copy()
+            temp[single_gene < t] = -1
+            temp[single_gene > t] = 1
+            
+            #record the accuracy
+            gene_acc.append(np.sum(temp.reshape(-1,1) != label.values))
+            
+            #change the direction and repeat
+            temp = single_gene.copy()
+            temp[single_gene < t] = 1
+            temp[single_gene > t] = -1
             
             gene_acc.append(np.sum(temp.reshape(-1,1) != label.values))
             
@@ -421,7 +437,7 @@ def MFAplus(data, label, desc, threshold, k_neighbor=5, k=10):
     feature, feature_desc = MFA(colon_scale, colon_label, desc, k_neighbor, k=2000)
     X = feature[:,0].reshape(-1,1)
     Xd = pd.DataFrame()
-    Xd = pd.concat([Xd,desc.iloc[1:2]])
+    Xd = pd.concat([Xd,desc.iloc[[0], :]])
     
     j = 0
     while X.shape[1] < k:
@@ -433,7 +449,7 @@ def MFAplus(data, label, desc, threshold, k_neighbor=5, k=10):
                 break;
             
         X = np.append(X,feature[:,j].reshape(-1,1),axis=1)
-        Xd = pd.concat([Xd,desc.iloc[j]])
+        Xd = pd.concat([Xd,desc.iloc[[j], :]])
         
     return X,Xd
 
