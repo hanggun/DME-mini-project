@@ -40,7 +40,7 @@ def f_test(data, label, desc, k=10):
     
     return X,Xd
 
-def TNoM(data, label, desc, k):
+def TNoM(data, label, desc, k=10):
     '''
     perform TNoM Score to all the features of input data and return
     the features with top TNoM scores. The order is in increasing
@@ -103,12 +103,11 @@ def TNoM(data, label, desc, k):
 #-------------------------------------------------------------------
 # MFA has three functions
 #-------------------------------------------------------------------
-def MFA(data, label, desc, k):
+def MFAplus(data, label, desc, k_neighbor=5, k=10):
     '''
-    perform MFA Score to all the features of input data and return
+    perform MFA+ Score to all the features of input data and return
     the features with top MFA scores. The order is in increasing
-    order of scores. The default number of nearest neiborhoods is 5
-    and can be change manully.
+    order of scores.
     
     Input:
         -------------------------------------------
@@ -130,8 +129,8 @@ def MFA(data, label, desc, k):
     '''
     
     #5 nearest neighbors
-    k1 = KNN1(data, label, 5)
-    k2 = KNN2(data, label, 5)
+    k1 = KNN1(data, label, k_neighbor)
+    k2 = KNN2(data, label, k_neighbor)
     
     #calculate Ww
     nrow = data.shape[0]
@@ -171,7 +170,7 @@ def MFA(data, label, desc, k):
     
     return X,Xd
 
-def KNN1(data, label, k):
+def KNN1(data, label, k=5):
     '''
     Calculate k nearest neiborhoods of sample x of same labels and record the index
     '''
@@ -203,7 +202,7 @@ def KNN1(data, label, k):
             
     return k1
 
-def KNN2(data, label, k):
+def KNN2(data, label, k=5):
     '''
     Calculate k nearest neiborhoods of sample x of different labels and record the index
     '''
