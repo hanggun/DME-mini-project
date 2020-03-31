@@ -321,7 +321,7 @@ def MFAplus(data, label, desc, threshold, k_neighbor=5, k=10):
         Xd:
             data description
     '''
-    feature, feature_desc, mfa_index = MFA(data, label, desc, k_neighbor, k)
+    feature, feature_desc, mfa_index = MFA(data, label, desc, k_neighbor, k=data.shape[1])
     X = feature[:,0].reshape(-1,1)
     Xd = pd.DataFrame()
     Xd = pd.concat([Xd,feature_desc.iloc[[0], :]])
@@ -343,3 +343,25 @@ def MFAplus(data, label, desc, threshold, k_neighbor=5, k=10):
     index = np.array(Xd.index)
     
     return X, Xd, index
+
+def plot_confusion_matrix(cm, normalize=False, classes=None, title='Confusion matrix'):
+    """Plots a confusion matrix.
+    
+    If normalize is set to True, the rows of the confusion matrix are normalized so that they sum up to 1.
+    
+    """
+    if normalize is True:
+        cm = cm/cm.sum(axis=1)[:, np.newaxis]
+        vmin, vmax = 0., 1.
+        fmt = '.2f'
+    else:
+        vmin, vmax = None, None
+        fmt = 'd'
+    if classes is not None:
+        sns.heatmap(cm, xticklabels=classes, yticklabels=classes, vmin=vmin, vmax=vmax, 
+                    annot=True, annot_kws={"fontsize":9}, fmt=fmt)
+    else:
+        sns.heatmap(cm, vmin=0., vmax=1.)
+    plt.title(title)
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
