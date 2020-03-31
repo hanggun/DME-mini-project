@@ -170,13 +170,13 @@ def KNN1(data, label, k):
     Calculate k nearest neiborhoods of sample x of same labels and record the index
     '''
 
-    k1 = np.ones([62,k])
+    k1 = np.ones([data.shape[0],k])
     index0 = label.index[label['label'] == -1].tolist()
     index1 = label.index[label['label'] == 1].tolist()
     
-    for i in range(62):
+    for i in range(data.shape[0]):
         dist = []
-        for j in range(62):
+        for j in range(data.shape[0]):
             if(i != j):
                 #calculate euclidean distance
                 distance = np.sqrt(np.sum((data[i,:] - data[j,:])**2))
@@ -202,13 +202,13 @@ def KNN2(data, label, k=5):
     Calculate k nearest neiborhoods of sample x of different labels and record the index
     '''
 
-    k2 = np.ones([62,k])
+    k2 = np.ones([data.shape[0],k])
     index0 = label.index[label['label'] == -1].tolist()
     index1 = label.index[label['label'] == 1].tolist()
     
-    for i in range(62):
+    for i in range(data.shape[0]):
         dist = []
-        for j in range(62):
+        for j in range(data.shape[0]):
             if(i != j):
                 #calculate euclidean distance
                 distance = np.sqrt(np.sum((data[i,:] - data[j,:])**2))
@@ -321,7 +321,7 @@ def MFAplus(data, label, desc, threshold, k_neighbor=5, k=10):
         Xd:
             data description
     '''
-    feature, feature_desc = MFA(colon_scale, colon_label, desc, k_neighbor, k=2000)
+    feature, feature_desc, mfa_index = MFA(data, label, desc, k_neighbor, k)
     X = feature[:,0].reshape(-1,1)
     Xd = pd.DataFrame()
     Xd = pd.concat([Xd,feature_desc.iloc[[0], :]])
@@ -339,5 +339,7 @@ def MFAplus(data, label, desc, threshold, k_neighbor=5, k=10):
         if flag == 0:
             X = np.append(X,feature[:,j].reshape(-1,1),axis=1)
             Xd = pd.concat([Xd,feature_desc.iloc[[j], :]])
-        
+    
+    index = np.array(Xd.index)
+    
     return X, Xd, index
