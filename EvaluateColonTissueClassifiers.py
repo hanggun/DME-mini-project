@@ -320,39 +320,38 @@ plt.savefig("Figures/ConfusionMatrixForBestGaussianNaiveBayesClassifier.pdf", dp
 
 print("\n")
 
-# TODO: Rerun.
 '''
 Best Logistic Regression Classifier
 '''
-#print("Best logistic regression classifier with F-test:")
-#best_logistic_regression_f_test_index = logistic_regression_f_test_dict["best_logistic_regression_f_test_index"]
+print("Best logistic regression classifier with F-test:")
+best_logistic_regression_f_test_index = logistic_regression_f_test_dict["best_logistic_regression_f_test_index"]
 
-#X_train_f_test_sc = X_train_sc[:, logistic_regression_f_test_dict["logistic_regression_f_test_index"][best_logistic_regression_f_test_index]]
-#X_test_f_test_sc  = X_test_sc[:, logistic_regression_f_test_dict["logistic_regression_f_test_index"][best_logistic_regression_f_test_index]]
-#print("F-test selected genes:", logistic_regression_f_test_dict["logistic_regression_f_test_index"][best_logistic_regression_f_test_index])
-#
-#best_logistic_regression_classifier = LogisticRegression(C=logistic_regression_f_test_dict["logistic_regression_f_test_Cs"][best_logistic_regression_f_test_index])
-#
-#best_logistic_regression_classifier.fit(X_train_f_test_sc, y_train)
-#best_logistic_regression_classifier_test_pred          = best_logistic_regression_classifier.predict(X_test_f_test_sc)
-#best_logistic_regression_classifier_test_inverted_pred = best_logistic_regression_classifier_test_pred * -1
-#best_logistic_regression_classifier_test_pred_proba    = best_logistic_regression_classifier.predict_proba(X_test_f_test_sc)
-#
-#print("Classification accuracy on test dataset: {:.4f}".format(accuracy_score(y_test_inverted, best_logistic_regression_classifier_test_inverted_pred)))
-#print("Log-loss score on test dataset : {}".format(log_loss(y_test, best_logistic_regression_classifier_test_pred_proba)))
-#print("Precision score on test dataset: {:.4f}".format(precision_score(y_test_inverted, best_logistic_regression_classifier_test_inverted_pred)))
-#print("Recall score on test dataset: {:.4f}".format(recall_score(y_test_inverted, best_logistic_regression_classifier_test_inverted_pred)))
-#print("F1 score on test dataset: {:.4f}".format(f1_score(y_test_inverted, best_logistic_regression_classifier_test_inverted_pred)))
-#
-#cm = confusion_matrix(y_test, best_logistic_regression_classifier_test_pred)
-#fig = plt.figure()
-#plot_confusion_matrix(cm, normalize=False,
-#                      classes=["Tumor tissue", "Normal tissue"],
-#                      title="Confusion Matrix For Logistic Regression Classifier")
-#fig.tight_layout()
-#plt.savefig("Figures/ConfusionMatrixForBestLogisticRegressionClassifier.pdf", dpi=400)
-#
-#print("\n")
+X_train_f_test_sc = X_train_sc[:, logistic_regression_f_test_dict["logistic_regression_f_test_index"][best_logistic_regression_f_test_index]]
+X_test_f_test_sc  = X_test_sc[:, logistic_regression_f_test_dict["logistic_regression_f_test_index"][best_logistic_regression_f_test_index]]
+print("F-test selected genes:", logistic_regression_f_test_dict["logistic_regression_f_test_index"][best_logistic_regression_f_test_index])
+
+best_logistic_regression_classifier = LogisticRegression(C=logistic_regression_f_test_dict["logistic_regression_f_test_Cs"][best_logistic_regression_f_test_index])
+
+best_logistic_regression_classifier.fit(X_train_f_test_sc, y_train)
+best_logistic_regression_classifier_test_pred          = best_logistic_regression_classifier.predict(X_test_f_test_sc)
+best_logistic_regression_classifier_test_inverted_pred = best_logistic_regression_classifier_test_pred * -1
+best_logistic_regression_classifier_test_pred_proba    = best_logistic_regression_classifier.predict_proba(X_test_f_test_sc)
+
+print("Classification accuracy on test dataset: {:.4f}".format(accuracy_score(y_test_inverted, best_logistic_regression_classifier_test_inverted_pred)))
+print("Log-loss score on test dataset : {}".format(log_loss(y_test, best_logistic_regression_classifier_test_pred_proba)))
+print("Precision score on test dataset: {:.4f}".format(precision_score(y_test_inverted, best_logistic_regression_classifier_test_inverted_pred)))
+print("Recall score on test dataset: {:.4f}".format(recall_score(y_test_inverted, best_logistic_regression_classifier_test_inverted_pred)))
+print("F1 score on test dataset: {:.4f}".format(f1_score(y_test_inverted, best_logistic_regression_classifier_test_inverted_pred)))
+
+cm = confusion_matrix(y_test, best_logistic_regression_classifier_test_pred)
+fig = plt.figure()
+plot_confusion_matrix(cm, normalize=False,
+                      classes=["Tumor tissue", "Normal tissue"],
+                      title="Confusion Matrix For Logistic Regression Classifier")
+fig.tight_layout()
+plt.savefig("Figures/ConfusionMatrixForBestLogisticRegressionClassifier.pdf", dpi=400)
+
+print("\n")
 
 '''
 Best KNN Classifier
