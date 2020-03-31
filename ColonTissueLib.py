@@ -359,9 +359,10 @@ def plot_confusion_matrix(cm, normalize=False, classes=None, title='Confusion ma
         fmt = 'd'
     if classes is not None:
         sns.heatmap(cm, xticklabels=classes, yticklabels=classes, vmin=vmin, vmax=vmax, 
-                    annot=True, annot_kws={"fontsize":9}, fmt=fmt)
+                    annot=True, annot_kws={"fontsize":25}, fmt=fmt)
     else:
         sns.heatmap(cm, vmin=0., vmax=1.)
-    plt.title(title)
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')
+    plt.title(title, fontsize=12)
+    plt.ylabel('True label', fontsize=12)
+    plt.xlabel('Predicted label', fontsize=12)
+    plt.tick_params(labelsize=12)
