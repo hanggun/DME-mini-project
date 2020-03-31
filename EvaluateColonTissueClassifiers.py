@@ -44,6 +44,7 @@ colon_full        = pd.read_csv('colonCancerData.csv', index_col=0)
 colon_labels      = pd.read_csv('label.csv')
 colon_labels      = ConvertLabels(colon_labels)
 gene_descriptions = pd.read_csv('colonGeneDescriptions.csv')
+gene_names        = gene_descriptions["1"]
 
 # Split data into train dataset (80%) and test dataset (20%).
 X_train, X_test, y_train, y_test = train_test_split(colon_full, colon_labels, test_size=0.2, random_state=random_state)
@@ -215,23 +216,10 @@ plt.legend(loc='best')
 fig.tight_layout()
 plt.savefig("Figures/MlpLoocvAccuracy.pdf", dpi=400)
 
-
-
-
-
-
-
-
-
-
-
-
-# TODO: Print names of the selected genes.
-
 # Analyse models based on best LOOCV results.
 print("Linear SVM classifier (F-test):")
 index = linear_svm_f_test_dict["best_linear_svm_f_test_index"]
-print("Selected genes:", linear_svm_f_test_dict["linear_svm_f_test_index"][index])
+print("Selected genes:", gene_names.loc[linear_svm_f_test_dict["linear_svm_f_test_index"][index]])
 print("LOOCV accuracy on validation dataset: {:.4f}".format(linear_svm_f_test_dict["linear_svm_f_test_scores"][index]))
 print("Optimum hyperparameter C = {}".format(linear_svm_f_test_dict["linear_svm_f_test_Cs"][index]))
 print("Optimum hyperparameter gamma = {}".format(linear_svm_f_test_dict["linear_svm_f_test_gammas"][index]))
@@ -239,14 +227,14 @@ print("\n")
 
 print("Gaussian Naive Bayes classifier (F-test):")
 index = gaussian_nb_f_test_dict["best_gaussian_nb_f_test_index"]
-print("Selected genes:", gaussian_nb_f_test_dict["gaussian_nb_f_test_index"][index])
+print("Selected genes:", gene_names.loc[gaussian_nb_f_test_dict["gaussian_nb_f_test_index"][index]])
 print("LOOCV accuracy on validation dataset: {:.4f}".format(gaussian_nb_f_test_dict["gaussian_nb_f_test_scores"][index]))
 print("Optimum hyperparameter var_smoothing = {}".format(gaussian_nb_f_test_dict["gaussian_nb_f_test_var_smoothings"][index]))
 print("\n")
 
 print("KNN classifier (F-test):")
 index = knn_f_test_dict["best_knn_f_test_index"]
-print("Selected genes:", knn_f_test_dict["knn_f_test_index"][index])
+print("Selected genes:", gene_names.loc[knn_f_test_dict["knn_f_test_index"][index]])
 print("LOOCV accuracy on validation dataset: {:.4f}".format(knn_f_test_dict["knn_f_test_scores"][index]))
 print("Optimum hyperparameter n_neighbors = {}".format(knn_f_test_dict["knn_f_test_n_neighbors"][index]))
 print("Optimum hyperparameter leaf_size = {}".format(knn_f_test_dict["knn_f_test_leaf_sizes"][index]))
@@ -255,7 +243,7 @@ print("\n")
 
 print("KNN classifier (TNoM):")
 index = knn_tnom_dict["best_knn_tnom_index"]
-print("Selected genes:", knn_tnom_dict["knn_tnom_index"][index])
+print("Selected genes:", gene_names.loc[knn_tnom_dict["knn_tnom_index"][index]])
 print("LOOCV accuracy on validation dataset: {:.4f}".format(knn_tnom_dict["knn_tnom_scores"][index]))
 print("Optimum hyperparameter n_neighbors = {}".format(knn_tnom_dict["knn_tnom_n_neighbors"][index]))
 print("Optimum hyperparameter leaf_size = {}".format(knn_tnom_dict["knn_tnom_leaf_sizes"][index]))
@@ -264,28 +252,18 @@ print("\n")
 
 print("Logistic regression classifier (F-test):")
 index = logistic_regression_f_test_dict["best_logistic_regression_f_test_index"]
-print("Selected genes:", logistic_regression_f_test_dict["logistic_regression_f_test_index"][index])
+print("Selected genes:", gene_names.loc[logistic_regression_f_test_dict["logistic_regression_f_test_index"][index]])
 print("LOOCV accuracy on validation dataset: {:.4f}".format(logistic_regression_f_test_dict["logistic_regression_f_test_scores"][index]))
 print("Optimum hyperparameter C = {}".format(logistic_regression_f_test_dict["logistic_regression_f_test_Cs"][index]))
 print("\n")
 
 print("MLP classifier (TNoM):")
 index = mlp_tnom_dict["best_mlp_tnom_index"]
-print("Selected genes:", mlp_tnom_dict["mlp_tnom_index"][index])
+print("Selected genes:", gene_names.loc[mlp_tnom_dict["mlp_tnom_index"][index]])
 print("LOOCV accuracy on validation dataset: {:.4f}".format(mlp_tnom_dict["mlp_tnom_scores"][index]))
 print("Optimum hyperparameter hidden_layer_size = {}".format(mlp_tnom_dict["mlp_tnom_hidden_layer_sizes"][index]))
 print("Optimum hyperparameter alpha = {}".format(mlp_tnom_dict["mlp_tnom_alphas"][index]))
 print("\n")
-
-
-
-
-
-
-
-
-
-
 
 # Evaluate best models on test dataset.
 
@@ -388,18 +366,3 @@ fig.tight_layout()
 plt.savefig("Figures/ConfusionMatrixForBestLogisticRegressionClassifier.pdf", dpi=400)
 
 print("\n")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
