@@ -284,13 +284,13 @@ def KNN1(data, label, k):
     Calculate k nearest neiborhoods of sample x of same labels and record the index
     '''
 
-    k1 = np.ones([62,k])
+    k1 = np.ones([data.shape[0],k])
     index0 = label.index[label['label'] == -1].tolist()
     index1 = label.index[label['label'] == 1].tolist()
     
-    for i in range(62):
+    for i in range(data.shape[0]):
         dist = []
-        for j in range(62):
+        for j in range(data.shape[0]):
             if(i != j):
                 #calculate euclidean distance
                 distance = np.sqrt(np.sum((data[i,:] - data[j,:])**2))
@@ -317,13 +317,13 @@ def KNN2(data, label, k=5):
     Calculate k nearest neiborhoods of sample x of different labels and record the index
     '''
 
-    k2 = np.ones([62,k])
+    k2 = np.ones([data.shape[0],k])
     index0 = label.index[label['label'] == -1].tolist()
     index1 = label.index[label['label'] == 1].tolist()
     
-    for i in range(62):
+    for i in range(data.shape[0]):
         dist = []
-        for j in range(62):
+        for j in range(data.shape[0]):
             if(i != j):
                 #calculate euclidean distance
                 distance = np.sqrt(np.sum((data[i,:] - data[j,:])**2))
@@ -437,7 +437,7 @@ def MFAplus(data, label, desc, threshold, k_neighbor=5, k=10):
         Xd:
             data description
     '''
-    feature, feature_desc = MFA(colon_scale, colon_label, desc, k_neighbor, k=2000)
+    feature, feature_desc = MFA(data, label, desc, k_neighbor, k=2000)
     X = feature[:,0].reshape(-1,1)
     Xd = pd.DataFrame()
     Xd = pd.concat([Xd,feature_desc.iloc[[0], :]])
@@ -456,12 +456,13 @@ def MFAplus(data, label, desc, threshold, k_neighbor=5, k=10):
             X = np.append(X,feature[:,j].reshape(-1,1),axis=1)
             Xd = pd.concat([Xd,feature_desc.iloc[[j], :]])
         
-    return X,Xd
+    index = list(Xd.index)
+    return X,Xd,index
 
-train, train_dec = f_test(colon_scale, colon_label, gene, 20)
+#train, train_dec = f_test(colon_scale, colon_label, gene, 20)
 #train, train_dec = TNoM(colon_scale, colon_label, gene, 20)
-train, train_dec = MFA(colon_scale, colon_label, gene)
-#train, train_dec = MFAplus(colon_scale, colon_label, gene, 0.9)
+#train, train_dec = MFA(colon_scale, colon_label, gene, k_neighbor=3)
+#train, train_dec,index = MFAplus(colon_scale, colon_label, gene, 0.9, k_neighbor=5, k=40)
     
 #calculate the mean of each feature
 acc = []
@@ -482,7 +483,6 @@ acc.append(a)
     
 X,y = check_X_y(colon_scale, colon_label, ['csr', 'csc', 'coo'])
 args = [X[safe_mask(X, y == k)] for k in np.unique(y)]
-print(*args)
 
 def f_oneway(*args):
     """Performs a 1-way ANOVA.
@@ -550,4 +550,13 @@ def f_oneway(*args):
     prob = special.fdtrc(dfbn, dfwn, f)
     return f, prob
 
-f_oneway(*args)
+#f_oneway(*args)
+pd_scale = pd.DataFrame(colon_scale)
+pd_scale.columns = gene['1']
+corr = np.round(pd_scale.iloc[:, 0:10].corr(method='pearson'),4)
+fig, ax = plt.subplots(1, 1, figsize = (10,6))
+fig = sns.heatmap(np.abs(corr), annot=True, fmt=".1f", linewidths=.5)
+plt.title('The Heat Map of Correlation between each Feature')
+plt.xlabel('Gene Index')
+plt.ylabel('Gene Index')
+plt.savefig('Gene heatmap', dpi=100)
